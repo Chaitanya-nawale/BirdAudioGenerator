@@ -31,25 +31,11 @@ Modify `sem_diffusers\pipeline_latent_edit_diffusion.py` to include:
 import diffusers.pipelines.pipeline_utils
 ```
 
-## Inference Check
-
-### Errors and Fixes
-
-1. **Upgrade Pillow** to the latest version.
-2. **Install Diffusers** using:
-
-   ```bash
-   pip install --upgrade diffusers[torch]
-   ```
-3. **Fix Stable Diffusers** by modifying `sem_diffusers\pipeline_latent_edit_diffusion.py`:
-
-   ```python
-   import diffusers.pipelines.pipeline_utils
-   ```
-
-### Runtime
+### Result
 
 * **Base Image Generation**: 13 minutes runtime on a **4GB RTX 3050** for generating the base image.
+
+![Base Image](images/dll1.png)
 * **Editing with Prompt**: 30 minutes runtime for image editing with the following prompt:
 
   ```python
@@ -59,6 +45,7 @@ import diffusers.pipelines.pipeline_utils
     'ship on a river, ship'
   ]
   ```
+![Stable Artist Result](images/dll2.png)
 
 ## Future Work
 
