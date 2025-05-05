@@ -1,0 +1,12 @@
+1. Create Python env using uv
+2. Install  uv pip install git+https://github.com/ml-research/semantic-image-editing@StableArtist
+3. uv pip install ftfy
+4. Run batch_script.sh 
+
+You will encounter 
+  File "/rwthfs/rz/cluster/home/oh275203/Lab_DL/DLL1/stable/lib/python3.12/site-packages/semdiffusers/pipeline_latent_edit_diffusion.py", line 12, in <module>
+    from diffusers.pipeline_utils import DiffusionPipeline
+ModuleNotFoundError: No module named 'diffusers.pipeline_utils'
+
+Go to this py file and nano 
+Edit diffusers.pipelines.pipeline_utils
