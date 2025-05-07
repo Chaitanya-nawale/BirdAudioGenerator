@@ -1,0 +1,7 @@
+paperdump/
+.vscode
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.venv
