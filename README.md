@@ -24,7 +24,14 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 #### Meeting Notes
 | Discussion Points |
 |-------------------|
-| _To be filled_ | 
+| Give Stable Artist multiple text prompts and see if the transitions look good. Understand the latent space of Stable Artist |
+| Find a model for classifying audio, both quantitative (e.g. a bird sound appears, model says "theres a bird now") and qualitative (e.g. how intense the audio is; mood). Can start with VGGSound. |
+| Literature review of Stable Artist, look into possible metric, layer based image editing |
+| There is no clear objective to baseline next week and generating video is computationally expensive so Pivot suggestion by Christian: Predict music from images(video) |
+| New set of Tasks would include |
+| Find a Baseline preferably with Video to music generation if not a good first step would be image + text to music or just text to music |
+| Preprocess the Ambient audio dataset to searve as video to music pairs for finetuning |
+
 
 ---
 
@@ -72,9 +79,14 @@ A running log of key updates and changes.
 
 ## 📌 Notes
 
+Next tasks:
+
+
+
 ---
 
 
 ## 🧑‍💻 Individual contributions
 
 Individual contributions can be tracked at contribution/\<name\>.md 
+
