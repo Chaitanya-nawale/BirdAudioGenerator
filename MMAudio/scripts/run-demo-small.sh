@@ -12,11 +12,11 @@
 #SBATCH --mem-per-gpu=48G
 
 ### Activate virtual environment
-source .venv/bin/activate
+source ../.venv/bin/activate
 
-python3 demo.py \
+python3 ../demo.py \
     --duration 8 \
-    --video "examples/F8Zt3mYlOqU_000094.mp4" \
+    --video "../examples/F8Zt3mYlOqU_000094.mp4" \
     --prompt "whales in ocean" \
     --variant "small_16k" \
 
