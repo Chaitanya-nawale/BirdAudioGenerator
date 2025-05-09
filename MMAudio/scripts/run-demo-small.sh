@@ -8,7 +8,7 @@
 #SBATCH -o gpu_serial.%J.log
 #SBATCH --gres=gpu:1
 #SBATCH --time=00:15:00 # Run time of 15 minutes
-#SBATCH --output=mmaudio_run_%j.log
+#SBATCH --output=../logs/mmaudio_run_%j.log
 #SBATCH --mem-per-gpu=48G
 
 ### Activate virtual environment
@@ -19,4 +19,4 @@ python3 demo.py \
     --video "examples/F8Zt3mYlOqU_000094.mp4" \
     --prompt "whales in ocean" \
     --variant "small_16k" \
-    
+
