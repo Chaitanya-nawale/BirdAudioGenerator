@@ -13,7 +13,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 |-----------|----------------|--------|----------|
 | Lloyd | - Literature review<br>- Setup gitlab & sciebo for project tracking | -🔄 Ongoing<br>-✅ Done | Literature review is in progress find detailed updates at references/ |
 | Ligandro | - _To be filled_ | _To be filled_| _To be filled_ |
-| Chaitanya | - _To be filled_ | _To be filled_ | _To be filled_|
+| Chaitanya | - Assisted Ligandro to setup Stable Artist on RWTH Cluster <br> - Researched about audio to text models | -✅ Done<br>-❌ Abandoned | The audio to text models which are present online are mostly transcription models. I was unable to find a suitable model for our task. |
 | Paul | - _To be filled_ | _To be filled_| _To be filled_|
 | Lukas | - _To be filled_ | _To be filled_ | _To be filled_ |
 
@@ -39,7 +39,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 |-----------|----------------|--------|----------|
 | Lloyd | |  |  |
 | Ligandro |  | |  |
-| Chaitanya | |  |  |
+| Chaitanya | - Researched for text/video to audio models and found MMAudio model which can be suitable for our task <br> - Set up MMAudio on cluster and tested a few prompts on it| -✅ Done <br> - ✅ Done  |  |
 | Paul |  |  |  |
 | Lukas |  | |  |
 
