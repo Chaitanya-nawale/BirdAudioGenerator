@@ -8,6 +8,8 @@ __pycache__/
 *.lock
 run_*.sh
 MMAudio/log/
+MMAudio/logs/
+MMAudio/examples/
 saves
 MMAudio/saves/
 MMAudio/weights/
