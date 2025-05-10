@@ -19,7 +19,7 @@ cudnn_benchmark: True
 compile: True
 amp: True
 weights: null
-checkpoint: null
+checkpoint: null #TODO: change this to the location of the small 16k checkpoint
 seed: 14159265
 num_workers: 10 # per-GPU
 pin_memory: False # set to True if your system can handle it, i.e., have enough memory

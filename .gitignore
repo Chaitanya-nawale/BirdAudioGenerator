@@ -9,6 +9,7 @@ __pycache__/
 run_*.sh
 MMAudio/log/
 MMAudio/logs/
+MMAudio/data/
 MMAudio/examples/
 saves
 MMAudio/saves/
@@ -21,7 +22,12 @@ MMAudio/workspace/
 MMAudio/ext_weights/
 ext_weights
 MMAudio/.checkpoints/
+MMAudio/checkpoints/
 training/example_output/
+images/
+MMAudio/.python-version
+MMAudio/av-benchmark/
+MMAudio/tools/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
