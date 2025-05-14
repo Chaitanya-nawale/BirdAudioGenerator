@@ -50,19 +50,34 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 #### Meeting Notes
 | Discussion Points |
 |-------------------|
-| _To be filled_ | 
-| _To be filled_ | 
-| _To be filled_ | 
-| _To be filled_ | 
-| _To be filled_ | 
-| _To be filled_ | 
+| More engagement on the whatsapp group to have detailed discussions | 
+| Potential tasks(use this as reference but feel free to do anything you feel is relevant): <br> 1. Download and preprocess the INaturalist Sounds [github](https://github.com/visipedia/inat_sounds/tree/main/2024) [paper](https://proceedings.neurips.cc/paper_files/paper/2024/file/ef3713b8d72266e803f9346088fed92d-Paper-Datasets_and_Benchmarks_Track.pdf)  and INauralist Images dataset [github](https://github.com/visipedia/inat_comp/tree/master/2021)  to create image audio training pairs <br> 2. Choose 4 datasets from Table 1. in the BirdSet dataset [paper](https://arxiv.org/pdf/2403.10380v3) [github](https://github.com/DBD-research-group/BirdSet) except INaturalist and do a deep dive of a relevant subset <br> 3. Looking for good image to audio generative models keeping compute resources in mind <br> 4. Performing a finetuning run on a pretrained model tracking metrics like training loss and validation loss. <br> 5. Setting up a classification model to track improvement in performance | 
+| Fill the tasks of next week with what you will be working on or mention on the whasapp group | 
 
+---
 
-## 🔁 Pipeline Overview
+### Week 3 (14-05 to 21-05)
 
-1. [ Text Prompt ] -----> [ Stable Artist {Generate Base Image}]
-2. [ Lofi Audio ] --> [ Audio-to-Text {Extract time wise text desc of audio} ] -- text-based instructions --> [ Stable Artist {Diffuses Over Base Image} ]
+| Developer | Tasks | Status | Comments |
+|-----------|----------------|--------|----------|
+| Lloyd | 1. Download and preprocess iNaturalist Sounds and iNaturalist Images to create image-audio pairs <br> 2. Look for image to audio models that are more relevant and easier to train than MMAudio <br> 3. Do one finetuning run and report metrics | 1. 🔄  <br> 2. 🔄  <br> 3. 🔄  | -> On second thought I will not try to run a training using MMAudio as it relies heavily on text embeddings and their pipeline is a bit complicated |
+| Ligandro |  | |  |
+| Chaitanya | |  |  |
+| Paul |  |  |  |
 
+> Names are in no particular order
+<br>
+> ✅ Done 🔄 Ongoing ⏳ Pending ❌ Abandoned
+
+#### Meeting Notes
+| Discussion Points |
+|-------------------|
+| _To be filled_ | 
+| _To be filled_ | 
+| _To be filled_ | 
+| _To be filled_ | 
+| _To be filled_ | 
+| _To be filled_ | 
 
 
 ## 🆕 Updates Log
@@ -73,15 +88,10 @@ A running log of key updates and changes.
 |-----------|-------------------------------------------------------------------------------|
 | 30-04 | Moved away from [TPoS](https://arxiv.org/abs/2309.04509) due to fairly complex implementation, lack of good quality results, time consuming first step towards implementation and long inference time.                          |
 | 14-05 | Have to let go of the [ambient-audio dataset](https://huggingface.co/datasets/igorriti/ambience-audio) due to potential youtube copyright violations|
+| 14-05 | Pivot to image to audio generation with respect to birds |
 ---
 
-## 📌 Notes
 
-Next tasks:
-
-
-
----
 
 
 ## 🧑‍💻 Individual contributions
