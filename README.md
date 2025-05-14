@@ -37,11 +37,11 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 
 | Developer | Tasks | Status | Comments |
 |-----------|----------------|--------|----------|
-| Lloyd | |  |  |
+| Lloyd | -setup nvtop, ffmpeg and av-benchmark for MMAudio <br> -explored and tried to preprocess the ambient audio dataset <br> -explored other possible datasets details in my contrib md| -✅ Done <br> - ✅ Done <br> - ✅ Done| -Had to abandone literature review as a member left the group |
 | Ligandro |  | |  |
 | Chaitanya | - Researched for text/video to audio models and found MMAudio model which can be suitable for our task <br> - Set up MMAudio on cluster and tested a few prompts on it| -✅ Done <br> - ✅ Done  |  |
 | Paul |  |  |  |
-| Lukas |  | |  |
+| Lukas | ❌ Abandoned | |  |
 
 > Names are in no particular order
 <br>
@@ -72,7 +72,7 @@ A running log of key updates and changes.
 | Date       | Update Summary  | 
 |-----------|-------------------------------------------------------------------------------|
 | 30-04 | Moved away from [TPoS](https://arxiv.org/abs/2309.04509) due to fairly complex implementation, lack of good quality results, time consuming first step towards implementation and long inference time.                          |
-
+| 14-05 | Have to let go of the [ambient-audio dataset](https://huggingface.co/datasets/igorriti/ambience-audio) due to potential youtube copyright violations|
 ---
 
 ## 📌 Notes
