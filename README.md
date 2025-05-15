@@ -61,7 +61,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 | Developer | Tasks | Status | Comments |
 |-----------|----------------|--------|----------|
 | Lloyd | 1. Download and preprocess iNaturalist Sounds and iNaturalist Images to create image-audio pairs <br> 2. Look for image to audio models that are more relevant and easier to train than MMAudio <br> 3. Do one finetuning run and report metrics | 1. 🔄  <br> 2. 🔄  <br> 3. 🔄  | -> On second thought I will not try to run a training using MMAudio as it relies heavily on text embeddings and their pipeline is a bit complicated |
-| Ligandro |  | |  |
+| Ligandro | 1. Looking at datasets , checking out XenoCanto dataset <br> 2. Testing I hear your true colors: Image Guided Audio Generation model  3. Preprocess dataset and finetune the model and  | 1. 🔄  <br> 2. 🔄  <br> 3. 🔄  |  |
 | Chaitanya | |  |  |
 | Paul |  |  |  |
 
