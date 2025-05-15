@@ -12,7 +12,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 | Developer | Tasks | Status | Comments |
 |-----------|----------------|--------|----------|
 | Lloyd | - Literature review<br>- Setup gitlab & sciebo for project tracking | -🔄 Ongoing<br>-✅ Done | Literature review is in progress find detailed updates at references/ |
-| Ligandro | - _To be filled_ | _To be filled_| _To be filled_ |
+| Ligandro | - Setup Stable Artist on Local and Cluster <br>-Ran inference  | ✅ Done | _To be filled_ |
 | Chaitanya | - Assisted Ligandro to setup Stable Artist on RWTH Cluster <br> - Researched about audio to text models | -✅ Done<br>-❌ Abandoned | The audio to text models which are present online are mostly transcription models. I was unable to find a suitable model for our task. |
 | Paul | - _To be filled_ | _To be filled_| _To be filled_|
 | Lukas | - _To be filled_ | _To be filled_ | _To be filled_ |
@@ -38,7 +38,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 | Developer | Tasks | Status | Comments |
 |-----------|----------------|--------|----------|
 | Lloyd | -setup nvtop, ffmpeg and av-benchmark for MMAudio <br> -explored and tried to preprocess the ambient audio dataset <br> -explored other possible datasets details in my contrib md| -✅ Done <br> - ✅ Done <br> - ✅ Done| -Had to abandone literature review as a member left the group |
-| Ligandro |  | |  |
+| Ligandro | -Tested Stable Audio for text to audio generation | -✅ Done | -Gave decent results on lofi audio prompts so cannot train further  |
 | Chaitanya | - Researched for text/video to audio models and found MMAudio model which can be suitable for our task <br> - Set up MMAudio on cluster and tested a few prompts on it| -✅ Done <br> - ✅ Done  |  |
 | Paul |  |  |  |
 | Lukas | ❌ Abandoned | |  |
