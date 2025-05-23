@@ -109,6 +109,60 @@ Super easy, simply follow these steps:
 
 You do not need to resample or pre-segment the audiofile. The dataloader will do most of the jobs.
 
+
+# VS Code launch.json example
+
+create a launch.json file within your .vscode folder 
+
+```shell
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "AC Infer",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "audioldm_train/infer.py",
+        "cwd": "${workspaceFolder}/AudioLDM-training-finetuning",
+        "console": "integratedTerminal",
+        "python": ".venv/bin/python",
+        "justMyCode": true,
+        "args": ["--config_yaml", "audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_crossattn_flant5.yaml",
+                  "--list_inference", "tests/captionlist/inference_test.lst", 
+                  "--reload_from_ckpt", "data/checkpoints/hifigan_16k_64bins.ckpt",
+                ],
+        "env": {
+            "WANDB_MODE": "disabled",
+            "TORCH_COMPILE_DISABLE": "1",
+            //"PYTHONPATH": "${workspaceFolder}/AudioLDM-training-finetuning",
+        }
+      },
+      {
+        "name": "AC Train",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "audioldm_train/train/latent_diffusion.py",
+        "cwd": "${workspaceFolder}/AudioLDM-training-finetuning",
+        "console": "integratedTerminal",
+        "python": ".venv/bin/python",
+        "justMyCode": true,
+        "args": ["--c", "audioldm_train/config/2023_08_23_reproduce_audioldm/audioldm_original.yaml",
+                  "--reload_from_ckpt", "data/checkpoints/audioldm-s-full",
+                ],
+        "env": {
+            "WANDB_MODE": "disabled",
+            "TORCH_COMPILE_DISABLE": "1",
+            //"PYTHONPATH": "${workspaceFolder}/AudioLDM-training-finetuning",
+        }
+      }
+    ]
+  }
+```  
+
+
+
+
+
 # Cite this work
 If you found this tool useful, please consider citing
 
