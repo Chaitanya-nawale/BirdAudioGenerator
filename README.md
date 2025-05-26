@@ -14,7 +14,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 | Lloyd | - Literature review<br>- Setup gitlab & sciebo for project tracking | -🔄 Ongoing<br>-✅ Done | Literature review is in progress find detailed updates at references/ |
 | Ligandro | - Setup Stable Artist on Local and Cluster <br>-Ran inference  | ✅ Done | _To be filled_ |
 | Chaitanya | - Assisted Ligandro to setup Stable Artist on RWTH Cluster <br> - Researched about audio to text models | -✅ Done<br>-❌ Abandoned | The audio to text models which are present online are mostly transcription models. I was unable to find a suitable model for our task. |
-| Paul | - _To be filled_ | _To be filled_| _To be filled_|
+| Paul | - Researched audio to video models <br> - Looked into other datasets <br> - Got some older web scraper I built to work for Youtube videos | -❌ Abandoned<br> -✅ Done<br> -✅ Done| -Was still looking into the audio to visual idea we initially had in mind<br> -Scraping further data online may be an option if training on visual-audio pairs, i.e. no further annotation required |
 | Lukas | - _To be filled_ | _To be filled_ | _To be filled_ |
 
 > Names are in no particular order
@@ -40,7 +40,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 | Lloyd | -setup nvtop, ffmpeg and av-benchmark for MMAudio <br> -explored and tried to preprocess the ambient audio dataset <br> -explored other possible datasets details in my contrib md| -✅ Done <br> - ✅ Done <br> - ✅ Done| -Had to abandone literature review as a member left the group |
 | Ligandro | -Tested Stable Audio for text to audio generation | -✅ Done | -Gave decent results on lofi audio prompts so cannot train further  |
 | Chaitanya | - Researched for text/video to audio models and found MMAudio model which can be suitable for our task <br> - Set up MMAudio on cluster and tested a few prompts on it| -✅ Done <br> - ✅ Done  |  |
-| Paul |  |  |  |
+| Paul | - Did not have much time this week due to a visit at my parents', looked into computing the latents in MMAudio  | -❌ Abandoned | |
 | Lukas | ❌ Abandoned | |  |
 
 > Names are in no particular order
@@ -63,7 +63,7 @@ Here we will track progress, outline the full pipeline, and manage weekly goals.
 | Lloyd | 1. Download and preprocess iNaturalist Sounds and iNaturalist Images to create image-audio pairs <br> 2. Look for image to audio models that are more relevant and easier to train than MMAudio <br> 3. Do one finetuning run and report metrics | 1. 🔄  <br> 2. 🔄  <br> 3. 🔄  | -> On second thought I will not try to run a training using MMAudio as it relies heavily on text embeddings and their pipeline is a bit complicated |
 | Ligandro | 1. Looking at datasets , checking out XenoCanto dataset <br> 2. Testing "I hear your true colors: Image Guided Audio Generation" model <br> 3. Preprocess dataset and finetune the model and  | 1. 🔄  <br> 2. 🔄  <br> 3. 🔄  |  |
 | Chaitanya | 1. Finding pontential datasets which can be used along with INaturalist <br> 2. Setting up iNaturalist Sounds and iNaturalist Image pairs for the model training<br> 3. Finding image to audio models|1. ✅ Done <br> 2. ✅ Done <br> 3. 🔄  |  |
-| Paul |  |  |  |
+| Paul | 1. Running initial inference on MMAudio<br> 2. Checking whether image data is useable if converted to static video of a single image<br> 3. Creating presentation template |1. ✅ Done<br> 2. ✅ Done <br> 3. ✅ Done | Inference ran well, image data useable in MMAudio if converted to static single-image video. MMAudio abandoned due to high complexity. |
 
 > Names are in no particular order
 <br>
