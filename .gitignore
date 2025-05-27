@@ -35,6 +35,7 @@ training_data/
 AudioLDM-training-finetuning/__pycache__
 AudioLDM-training-finetuning/taming
 AudioLDM-training-finetuning/log
+AudioLDM-training-finetuning/logs
 AudioLDM-training-finetuning/esc50.zip
 AudioLDM-training-finetuning/ESC-50-master
 *.wav
