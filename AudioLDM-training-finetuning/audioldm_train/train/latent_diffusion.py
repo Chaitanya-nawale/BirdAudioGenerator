@@ -62,7 +62,7 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
     loader = DataLoader(
         dataset,
         batch_size=batch_size,
-        num_workers=16,
+        num_workers=configs["step"]["train_num_workers"],
         pin_memory=True,
         shuffle=True,
     )
@@ -73,10 +73,12 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
     )
 
     val_dataset = AudioDataset(configs, split="test", add_ons=dataloader_add_ons)
-
+    limit_val_batches = configs["step"]["limit_val_batches"]
     val_loader = DataLoader(
         val_dataset,
-        batch_size=8,
+        batch_size=configs["step"]["val_batchsize"],
+        num_workers=configs["step"]["val_num_workers"],
+        pin_memory=True,
     )
 
     # Copy test data
