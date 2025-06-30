@@ -73,7 +73,6 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
     )
 
     val_dataset = AudioDataset(configs, split="test", add_ons=dataloader_add_ons)
-    limit_val_batches = configs["step"]["limit_val_batches"]
     val_loader = DataLoader(
         val_dataset,
         batch_size=configs["step"]["val_batchsize"],

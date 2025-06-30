@@ -1,11 +1,16 @@
 import os
 import yaml
 import torch
+#from audioldm_eval.audioldm_eval.eval import EvaluationHelper
 from audioldm_eval import EvaluationHelper
 
+
 SAMPLE_RATE = 16000
-device = torch.device(f"cuda:{0}")
-evaluator = EvaluationHelper(SAMPLE_RATE, device)
+#device = torch.device(f"cuda:{0}")
+device = torch.device(f"cpu")
+evaluator = EvaluationHelper(sampling_rate = SAMPLE_RATE,
+                             device = device,
+                             backbone="cnn14")
 
 
 def locate_yaml_file(path):
@@ -52,24 +57,24 @@ def evaluate_exp_performance(exp_name):
     for folder in folders_todo:
         print(folder)
 
-        if len(os.listdir(folder)) == 964:
-            test_dataset = "audiocaps"
-        elif len(os.listdir(folder)) > 5000:
-            test_dataset = "musiccaps"
-        else:
-            continue
+        test_dataset = "inaturalist_v1-2"
+        # if len(os.listdir(folder)) == 964:
+        #     test_dataset = "audiocaps"
+        # elif len(os.listdir(folder)) > 5000:
+        #     test_dataset = "musiccaps"
+        # else:
+        #     continue
 
         test_audio_data_folder = os.path.join(test_audio_path, test_dataset)
 
-        evaluator.main(folder, test_audio_data_folder)
+        evaluator.main(generate_files_path = folder, groundtruth_path = test_audio_data_folder)
 
 
 def eval(exps):
     for exp in exps:
-        try:
-            evaluate_exp_performance(exp)
-        except Exception as e:
-            print(exp, e)
+        evaluate_exp_performance(exp)
+        # except Exception as e:
+        #     print(exp, e)
 
 
 if __name__ == "__main__":
