@@ -72,7 +72,7 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
         % (len(dataset), len(loader), batch_size)
     )
 
-    val_dataset = AudioDataset(configs, split="test", add_ons=dataloader_add_ons)
+    val_dataset = AudioDataset(configs, split="val", add_ons=dataloader_add_ons)
     val_loader = DataLoader(
         val_dataset,
         batch_size=configs["step"]["val_batchsize"],
@@ -90,7 +90,8 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
     copy_test_subset_data(val_dataset.data, test_data_subset_folder)
 
     try:
-        config_reload_from_ckpt = configs["reload_from_ckpt"]
+        config_reload_from_ckpt = configs["model"]["params"]["first_stage_config"]["params"]["reload_from_ckpt"]
+        #config_reload_from_ckpt = configs["reload_from_ckpt"]
     except:
         config_reload_from_ckpt = None
 
@@ -137,6 +138,8 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
         resume_from_checkpoint = None
 
     devices = torch.cuda.device_count()
+
+    #devices = 1
 
     latent_diffusion = instantiate_from_config(configs["model"])
     latent_diffusion.set_log_dir(log_path, exp_group_name, exp_name)

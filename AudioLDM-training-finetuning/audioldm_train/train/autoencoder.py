@@ -42,7 +42,11 @@ def main(configs, exp_group_name, exp_name):
     dataset = AudioDataset(config_yaml, split="train", add_ons=dataloader_add_ons)
 
     loader = DataLoader(
-        dataset, batch_size=batch_size, num_workers=8, pin_memory=True, shuffle=True
+        dataset,
+        batch_size=batch_size, 
+        num_workers=configs["step"]["train_num_workers"],
+        pin_memory=True,
+        shuffle=True
     )
 
     print(
@@ -59,6 +63,15 @@ def main(configs, exp_group_name, exp_name):
         shuffle=True,
     )
 
+    test_dataset = AudioDataset(config_yaml, split="test", add_ons=dataloader_add_ons)
+
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=batch_size,
+        num_workers=8,
+        shuffle=True,
+    )
+
     model = AutoencoderKL(
         ddconfig=config_yaml["model"]["params"]["ddconfig"],
         lossconfig=config_yaml["model"]["params"]["lossconfig"],
@@ -70,7 +83,7 @@ def main(configs, exp_group_name, exp_name):
     )
 
     try:
-        config_reload_from_ckpt = configs["reload_from_ckpt"]
+        config_reload_from_ckpt = configs["model"]["params"]["reload_from_ckpt"]
     except:
         config_reload_from_ckpt = None
 
@@ -125,10 +138,10 @@ def main(configs, exp_group_name, exp_name):
     )
 
     # TRAINING
-    trainer.fit(model, loader, val_loader, ckpt_path=resume_from_checkpoint)
+    #trainer.fit(model, loader, val_loader, ckpt_path=resume_from_checkpoint)
 
     # EVALUTION
-    # trainer.test(model, test_loader, ckpt_path=resume_from_checkpoint)
+    trainer.test(model, test_loader, ckpt_path=resume_from_checkpoint)
 
 
 if __name__ == "__main__":

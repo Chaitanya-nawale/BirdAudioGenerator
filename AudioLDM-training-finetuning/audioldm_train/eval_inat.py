@@ -6,11 +6,11 @@ from audioldm_eval import EvaluationHelper
 
 
 SAMPLE_RATE = 16000
-device = torch.device(f"cuda:{0}")
-#device = torch.device(f"cpu")
+#device = torch.device(f"cuda:{0}")
+device = torch.device(f"cuda")
 evaluator = EvaluationHelper(sampling_rate = SAMPLE_RATE,
-                              device = device,
-                              backbone="cnn14")
+                             device = device,
+                             backbone="cnn14")
 
 
 def locate_yaml_file(path):
@@ -50,7 +50,7 @@ def evaluate_exp_performance(exp_name):
 
     if config_yaml_path is None:
         print("%s does not contain a yaml configuration file" % exp_name)
-        return
+        return 
 
     folders_todo = locate_validation_output(abs_path_exp)
 
@@ -70,10 +70,6 @@ def evaluate_exp_performance(exp_name):
         evaluator.main(generate_files_path = folder, groundtruth_path = test_audio_data_folder)
 
 
-def eval_folders(generate_files_path, groundtruth_path):
-    evaluator.main(generate_files_path = generate_files_path, groundtruth_path = groundtruth_path)
-    pass
-
 def eval(exps):
     for exp in exps:
         evaluate_exp_performance(exp)
@@ -88,7 +84,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AudioLDM model evaluation")
 
     parser.add_argument(
-        "-l", "--log_path", type=str, help="the log path", required=False
+        "-l", "--log_path", type=str, help="the log path", required=True
     )
     parser.add_argument(
         "-e",
@@ -98,45 +94,25 @@ if __name__ == "__main__":
         required=False,
         default=None,
     )
-    parser.add_argument(
-        "--gen_files_path",
-        type=str,
-        help="the path to the generated files for evaluation",
-        required=False,
-        default=None,
-    )
-
-    parser.add_argument(
-        "--gt_files_path",
-        type=str,
-        help="the path to the ground truth files for evaluation",
-        required=False,
-        default=None,
-    )
 
     args = parser.parse_args()
 
-
     test_audio_path = "log/testset_data"
+    latent_diffusion_model_log_path = args.log_path
 
-    if args.gen_files_path is not None and args.gt_files_path is not None:
-        eval_folders(
-            generate_files_path=args.gen_files_path,
-            groundtruth_path=args.gt_files_path
-        )
-    elif args.log_path != "all":
+    if latent_diffusion_model_log_path != "all":
         exp_name = args.exp_name
         if exp_name is None:
-            exps = os.listdir(args.log_path)
+            exps = os.listdir(latent_diffusion_model_log_path)
             eval(exps)
         else:
             eval([exp_name])
     else:
         todo_list = [os.path.abspath("log/latent_diffusion")]
         for todo in todo_list:
-            for args.log_path in os.listdir(todo):
+            for latent_diffusion_model_log_path in os.listdir(todo):
                 latent_diffusion_model_log_path = os.path.join(
-                    todo, args.log_path
+                    todo, latent_diffusion_model_log_path
                 )
                 if not os.path.isdir(latent_diffusion_model_log_path):
                     continue
