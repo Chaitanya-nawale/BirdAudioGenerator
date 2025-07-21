@@ -28,6 +28,34 @@ images/
 MMAudio/.python-version
 MMAudio/av-benchmark/
 MMAudio/tools/
+training_data/
+
+AudioLDM-training-finetuning/audioldm_train/modules/AudioCLIP/assets
+
+AudioLDM-training-finetuning/__pycache__
+AudioLDM-training-finetuning/taming
+AudioLDM-training-finetuning/log
+AudioLDM-training-finetuning/logs
+AudioLDM-training-finetuning/esc50.zip
+AudioLDM-training-finetuning/ESC-50-master
+*.wav
+AudioLDM-training-finetuning/ckpt
+AudioLDM-training-finetuning/lightning_logs
+mlx_submit_*
+AudioLDM-training-finetuning/job_queue.sh
+*.txt
+*.cleaned
+AudioLDM-training-finetuning/audiocaps_train.json
+AudioLDM-training-finetuning/dataset
+AudioLDM-training-finetuning/checkpoints
+*.tar
+condor*
+AudioLDM-training-finetuning/wandb
+log/
+AudioLDM-training-finetuning/data
+AudioLDM-training-finetuning/log
+
+im2wav/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

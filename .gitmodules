@@ -1,0 +1,3 @@
+[submodule "AudioLDM-training-finetuning/audioldm_train/audioldm_eval"]
+	path = AudioLDM-training-finetuning/audioldm_train/audioldm_eval
+	url = https://github.com/haoheliu/audioldm_eval.git
