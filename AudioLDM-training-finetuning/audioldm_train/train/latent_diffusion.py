@@ -8,8 +8,10 @@ sys.path.append("src")
 import shutil
 import os
 
+
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
+from collections import Counter
 import argparse
 import yaml
 import torch
@@ -18,7 +20,7 @@ from tqdm import tqdm
 from pytorch_lightning.strategies.ddp import DDPStrategy
 from audioldm_train.utilities.data.dataset import AudioDataset
 
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
@@ -28,6 +30,8 @@ from audioldm_train.utilities.tools import (
 )
 from audioldm_train.utilities.model_util import instantiate_from_config
 import logging
+
+
 
 logging.basicConfig(level=logging.WARNING)
 
@@ -60,12 +64,30 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
     dataset = AudioDataset(configs, split="train", add_ons=dataloader_add_ons)
 
     loader = DataLoader(
-        dataset,
-        batch_size=batch_size,
-        num_workers=configs["step"]["train_num_workers"],
-        pin_memory=True,
-        shuffle=True,
-    )
+            dataset,
+            batch_size=batch_size,
+            num_workers=configs["step"]["train_num_workers"],
+            pin_memory=True,
+            shuffle=True,
+        )
+
+    if configs["augmentation"]["data_balance"]:
+        labels = [dataset.data[i]['labels'] for i in range(len(dataset.data))]
+        label_counts = Counter(labels)
+
+        weights = [1.0 / label_counts[label] for label in labels]
+
+        loader = DataLoader(
+            dataset,
+            batch_size=batch_size,
+            num_workers=configs["step"]["train_num_workers"],
+            pin_memory=True,
+            sampler=WeightedRandomSampler(
+                        weights=weights,
+                        num_samples=len(weights),
+                        replacement=True,
+                    ),
+        )
 
     print(
         "The length of the dataset is %s, the length of the dataloader is %s, the batchsize is %s"
@@ -117,7 +139,7 @@ def main(configs, config_yaml_path, exp_group_name, exp_name, perform_validation
         every_n_train_steps=save_checkpoint_every_n_steps,
         save_top_k=save_top_k,
         auto_insert_metric_name=False,
-        save_last=False,
+        save_last=configs['step']['save_ema'],
     )
 
     os.makedirs(checkpoint_path, exist_ok=True)
