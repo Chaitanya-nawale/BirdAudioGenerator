@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.7
 
-import ignite_trainer as it
+import audioldm_train.modules.AudioCLIP.ignite_trainer as it
 
 
 def main():

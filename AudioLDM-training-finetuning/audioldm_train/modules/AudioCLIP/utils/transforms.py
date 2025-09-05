@@ -4,9 +4,20 @@ import numpy as np
 
 import torch
 import torchvision as tv
+from PIL import Image
 
-import ignite_trainer as it
+import audioldm_train.modules.AudioCLIP.ignite_trainer as it
 
+IMAGE_SIZE = 224
+IMAGE_MEAN = 0.48145466, 0.4578275, 0.40821073
+IMAGE_STD = 0.26862954, 0.26130258, 0.27577711
+
+image_transforms = tv.transforms.Compose([
+    tv.transforms.ToTensor(),
+    tv.transforms.Resize(IMAGE_SIZE, interpolation=Image.BICUBIC),
+    tv.transforms.CenterCrop(IMAGE_SIZE),
+    tv.transforms.Normalize(IMAGE_MEAN, IMAGE_STD)
+])
 
 def scale(old_value, old_min, old_max, new_min, new_max):
     old_range = (old_max - old_min)
@@ -15,6 +26,8 @@ def scale(old_value, old_min, old_max, new_min, new_max):
 
     return new_value
 
+def transform_image(image):
+    return image_transforms(image)
 
 def frame_signal(signal: torch.Tensor,
                  frame_length: int,

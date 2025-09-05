@@ -66,6 +66,22 @@ def build_dataset_json_from_list(list_path):
         )
     return {"data": data}
 
+def build_image_dataset_json_from_list(list_path):
+    data = []
+    for each in read_list(list_path):
+        if "|" in each:
+            image, caption = each.split("|")
+        else:
+            caption = each
+            image = ""
+        data.append(
+            {
+                "image": image,
+                "caption": caption,
+            }
+        )
+    return {"data": data}
+
 
 def load_json(fname):
     with open(fname, "r") as f:

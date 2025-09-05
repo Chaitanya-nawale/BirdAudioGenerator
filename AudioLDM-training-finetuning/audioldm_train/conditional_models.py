@@ -27,6 +27,7 @@ from audioldm_train.modules.audiomae.sequence_gen.sequence_input import (
 )
 import numpy as np
 from audioldm_train.modules.audiomae.sequence_gen.model import Prenet
+from audioldm_train.modules.AudioCLIP.model import AudioCLIP
 
 """
 The model forward function can return three types of data:
@@ -1335,16 +1336,144 @@ class CLAPAudioEmbeddingClassifierFreev2(nn.Module):
         )
         return {k: v.squeeze(0) for k, v in result.items()}
 
+class AudioClipImageEmbeddingClassifierFreev2(nn.Module):
+    def __init__(
+        self,
+        pretrained_path,
+        sampling_rate=16000,
+        embed_mode="audio",
+        unconditional_prob=0.1,
+        random_mute=False,
+        max_random_mute_portion=0.5,
+        training_mode=True,
+    ):
+        super().__init__()
+        self.device = "cuda"
+        self.precision = "fp32"
+        self.pretrained = pretrained_path
+        self.embed_mode = embed_mode
+        self.embed_mode_orig = embed_mode
+        self.sampling_rate = sampling_rate
+        self.unconditional_prob = unconditional_prob
+        self.random_mute = random_mute
+        self.model = AudioCLIP(pretrained=self.pretrained).cuda()
+        self.max_random_mute_portion = max_random_mute_portion
+        self.training_mode = training_mode
+        
+        for p in self.model.parameters():
+            p.requires_grad = False
+        self.unconditional_token = None
+        self.model.eval()
+
+    def get_unconditional_condition(self, batchsize):
+        self.unconditional_token = self.model.encode_text([""])
+        return torch.cat([self.unconditional_token.unsqueeze(0)] * batchsize, dim=0)
+
+    def batch_to_list(self, batch):
+        ret = []
+        for i in range(batch.size(0)):
+            ret.append(batch[i])
+        return ret
+
+    def make_decision(self, probability):
+        if float(torch.rand(1)) < probability:
+            return True
+        else:
+            return False
+
+    def random_uniform(self, start, end):
+        val = torch.rand(1).item()
+        return start + (end - start) * val
+
+    def _random_mute(self, waveform):
+        # waveform: [bs, t-steps]
+        t_steps = waveform.size(-1)
+        for i in range(waveform.size(0)):
+            mute_size = int(
+                self.random_uniform(0, end=int(t_steps * self.max_random_mute_portion))
+            )
+            mute_start = int(self.random_uniform(0, t_steps - mute_size))
+            waveform[i, mute_start : mute_start + mute_size] = 0
+        return waveform
+
+    def cos_similarity(self, waveform, text):
+        # waveform: [bs, t_steps]
+        original_embed_mode = self.embed_mode
+        with torch.no_grad():
+            self.embed_mode = "audio"
+            audio_emb = self(waveform.cuda())
+            self.embed_mode = "text"
+            text_emb = self(text)
+            similarity = F.cosine_similarity(audio_emb, text_emb, dim=2)
+        self.embed_mode = original_embed_mode
+        return similarity.squeeze()
+
+    def build_unconditional_emb(self):
+        self.unconditional_token = self.model.encode_text([""])
+
+    def forward(self, batch):
+        # If you want this conditioner to be unconditional, set self.unconditional_prob = 1.0
+        # If you want this conditioner to be fully conditional, set self.unconditional_prob = 0.0
+        if self.model.training == True and not self.training_mode:
+            print(
+                "The pretrained Audioclip model should always be in eval mode. Reloading model just in case you change the parameters."
+            )
+            self.model = AudioCLIP(pretrained=self.pretrained).cuda()
+            for p in self.model.parameters():
+                p.requires_grad = False
+            self.model.eval()
+
+        if self.unconditional_token is None:
+            self.build_unconditional_emb()
+
+        if self.embed_mode == "audio":
+            if not self.training:
+                print("INFO: audioclip model calculate the audio embedding as condition")
+            with torch.no_grad():
+                if self.sampling_rate != 48000:
+                    batch = torchaudio.functional.resample(
+                        batch, orig_freq=self.sampling_rate, new_freq=48000
+                    )
+                audio_data = batch.squeeze(1)
+                embed = self.model.encode_audio(audio_data)
+        elif self.embed_mode == "text":
+            with torch.no_grad():
+                embed = self.model.encode_text(batch)
+
+        embed = embed.unsqueeze(1)
+        for i in range(embed.size(0)):
+            if self.make_decision(self.unconditional_prob):
+                embed[i] = self.unconditional_token
+        # embed = torch.randn((batch.size(0), 1, 512)).type_as(batch)
+        return embed.detach()
 
 if __name__ == "__main__":
-    model = CLAPAudioEmbeddingClassifierFreev2(
-        pretrained_path="/mnt/bn/lqhaoheliu/exps/checkpoints/audioldm/ckpt/CLAP.pt",
+    clapmodel = CLAPAudioEmbeddingClassifierFreev2(
+        pretrained_path="data/checkpoints/clap_htsat_tiny.pt",
         embed_mode="text",
         amodel="HTSAT-tiny",
     )
+    aclipmodel = AudioClipImageEmbeddingClassifierFreev2(
+        pretrained_path="data/checkpoints/AudioCLIP-Full-Training.pt",
+        embed_mode="text",
+    )
     # data = torch.randn((6, 1, int(16000*10.24)))
     data = ["text", "text"]
-    res = model(data)
+
+    res1 = clapmodel(data)
+    res2 = aclipmodel(data)
+
     import ipdb
 
     ipdb.set_trace()
+
+    tokenized = clapmodel.tokenize("text")
+    tokenizered = clapmodel.tokenizer("text")
+
+    uncodClap = clapmodel.get_unconditional_condition(24)
+    uncodClip = aclipmodel.get_unconditional_condition(24)
+
+    bclap = clapmodel.build_unconditional_emb()
+    bclip = aclipmodel.build_unconditional_emb()
+    
+    print(uncodClap.shape)

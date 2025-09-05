@@ -29,20 +29,20 @@ from termcolor import colored
 from collections import defaultdict
 from collections.abc import Iterable
 
-from ignite_trainer import _utils
-from ignite_trainer import _visdom
-from ignite_trainer import _interfaces
+from audioldm_train.modules.AudioCLIP.ignite_trainer import _utils
+from audioldm_train.modules.AudioCLIP.ignite_trainer import _visdom
+from audioldm_train.modules.AudioCLIP.ignite_trainer import _interfaces
 
 VISDOM_HOST = 'localhost'
 VISDOM_PORT = 8097
-VISDOM_ENV_PATH = os.path.join(os.path.expanduser('~'), 'logs')
+VISDOM_ENV_PATH = os.path.join('/hpcwork/wr356426/stablelofieditor/AudioLDM-training-finetuning/audioldm_train/modules/AudioCLIP', 'logs')
 BATCH_TRAIN = 128
 BATCH_TEST = 1024
 WORKERS_TRAIN = 0
 WORKERS_TEST = 0
 EPOCHS = 100
 LOG_INTERVAL = 50
-SAVED_MODELS_PATH = os.path.join(os.path.expanduser('~'), 'saved_models')
+SAVED_MODELS_PATH = os.path.join('/hpcwork/wr356426/stablelofieditor/AudioLDM-training-finetuning/audioldm_train/modules/AudioCLIP', 'saved_models')
 
 
 def run(experiment_name: str,
@@ -69,7 +69,7 @@ def run(experiment_name: str,
         model_suffix: Optional[str] = None,
         setup_suffix: Optional[str] = None,
         orig_stdout: Optional[io.TextIOBase] = None,
-        skip_train_val: bool = False):
+        skip_train_val: bool = True):
 
     with _utils.tqdm_stdout(orig_stdout) as orig_stdout:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -150,6 +150,7 @@ def run(experiment_name: str,
         # enable logit scaling
         model.module.logit_scale_ai.requires_grad = True
         model.module.logit_scale_at.requires_grad = True
+        model.module.logit_scale.requires_grad = True
 
         # add fbsp- and logit scaling parameters to a separate group without weight decay
         param_groups.append({
@@ -157,9 +158,10 @@ def run(experiment_name: str,
                 p for p in model.module.audio.fbsp.parameters()
             ] + [
                 model.module.logit_scale_ai,
-                model.module.logit_scale_at
+                model.module.logit_scale_at,
+                model.module.logit_scale
             ],
-            'weight_decay': 0.0
+            'weight_decay': 0.001
         })
 
         Optimizer: Type = _utils.load_class(optimizer_class)

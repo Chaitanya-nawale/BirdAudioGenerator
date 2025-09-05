@@ -159,6 +159,8 @@ def get_visdom_instance(host: str = 'localhost',
             os.makedirs(env_path, exist_ok=True)
 
             tqdm.tqdm.write('Starting visdom on port {}'.format(port), end='')
+            tqdm.tqdm.write('Starting visdom on host {}'.format(host), end='')
+            tqdm.tqdm.write('Starting visdom on env_path {}'.format(env_path), end='')
 
             vis_args = [
                 sys.executable,

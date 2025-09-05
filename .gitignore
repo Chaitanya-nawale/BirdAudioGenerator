@@ -85,6 +85,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-
-
-
+AudioLDM-training-finetuning/audioldm_train/modules/AudioCLIP/logs/
+training_data
+AudioLDM-training-finetuning/birds
+AudioLDM-training-finetuning/tests/notGoodImages/
+AudioLDM-training-finetuning/tests/captionlist/inference_test_birdnames.lst
