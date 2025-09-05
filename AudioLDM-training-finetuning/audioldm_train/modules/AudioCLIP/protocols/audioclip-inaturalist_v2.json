@@ -1,0 +1,130 @@
+{
+  "Visdom": {
+    "host": "localhost",
+    "port": 8097,
+    "env_path": "/hpcwork/wr356426/stablelofieditor/AudioLDM-training-finetuning/audioldm_train/modules/AudioCLIP/logs"
+  },
+  "Setup": {
+    "name": "Multimodal-Audio",
+    "suffix": "CV1",
+    "batch_train": 384,
+    "batch_test": 384,
+    "workers_train": 32,
+    "workers_test": 32,
+    "epochs": 30,
+    "log_interval": 10,
+    "saved_models_path": "./log"
+  },
+  "Model": {
+    "class": "model.audioclip.AudioCLIP",
+    "args": {
+      "multilabel": false,
+      "pretrained": "./log/INaturalist_Multimodal-Audio-x2_ACLIP-CV1/INaturalist_Multimodal-Audio-x2_ACLIP-CV1_ACLIP-CV1_performance=0.8012.pt"
+    }
+  },
+  "Optimizer": {
+    "class": "torch.optim.AdamW",
+    "args": {
+      "lr": 5e-4,
+      "weight_decay": 1e-4
+    }
+  },
+  "Scheduler": {
+    "class": "torch.optim.lr_scheduler.CosineAnnealingWarmRestarts",
+    "args": {
+      "T_0":30,
+      "T_mult":1,
+      "eta_min":1e-5
+    }
+  },
+  "Dataset": {
+    "class": "utils.datasets.INaturalist",
+    "args": {
+      "root": "/hpcwork/wr356426/stablelofieditor/AudioLDM-training-finetuning/audioldm_train/modules/AudioCLIP",
+      "sample_rate": 16000,
+      "fold": 1,
+      "mono": true,
+      "training": {
+        "key": "train",
+        "yes": true,
+        "no": false
+      }
+    }
+  },
+  "Transforms": [
+    {
+      "class": "utils.transforms.ToTensor1D",
+      "args": {}
+    },
+    {
+      "class": "utils.transforms.RandomFlip",
+      "args": {
+        "p": 0.5
+      },
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomScale",
+      "args": {
+        "max_scale": 1.50
+      },
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomPadding",
+      "args": {
+        "out_len": 220500
+      },
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomCrop",
+      "args": {
+        "out_len": 220500
+      },
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomNoise",
+      "args": {
+        "snr_min_db": 10.0,
+        "snr_max_db": 120.0,
+        "p": 0.25
+      },
+      "test": false
+    },
+    {
+      "class": "utils.transforms.RandomPadding",
+      "args": {
+        "out_len": 220500,
+        "train": false
+      },
+      "train": false
+    },
+    {
+      "class": "utils.transforms.RandomCrop",
+      "args": {
+        "out_len": 220500,
+        "train": false
+      },
+      "train": false
+    }
+  ],
+  "Metrics": {
+    "Performance": {
+      "window_name": null,
+      "x_label": "#Epochs",
+      "y_label": "Accuracy",
+      "width": 1890,
+      "height": 416,
+      "lines": [
+        {
+          "line_label": "Val. Acc.",
+          "class": "ignite.metrics.Accuracy",
+          "args": {},
+          "is_checkpoint": true
+        }
+      ]
+    }
+  }
+}

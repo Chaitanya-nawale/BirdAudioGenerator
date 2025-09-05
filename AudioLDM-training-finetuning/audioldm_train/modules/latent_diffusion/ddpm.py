@@ -115,6 +115,12 @@ class DDPM(pl.LightningModule):
             embed_mode="audio",
             amodel="HTSAT-base",
         )
+        # NOTE: Change the pretrained path to suitable AudioCLIP checkpoint whenever required
+        self.audio_clip = AudioClipImageEmbeddingClassifierFreev2(
+            pretrained_path="data/checkpoints/INaturalist_Multimodal-Audio-x2_ACLIP-CV1_ACLIP-CV1_performance=0.8012.pt",
+            sampling_rate=self.sampling_rate,
+            embed_mode="audio",
+        )
 
         if self.global_rank == 0:
             self.evaluator = evaluator
@@ -588,7 +594,10 @@ class DDPM(pl.LightningModule):
         #     self.reload_everything()
         #     self.ckpt = None
 
-        self.random_clap_condition()
+        # NOTE: Using AudioCLIP condition instead of CLAP
+        #self.random_clap_condition()
+        self.random_audioclip_condition()
+        
         self.warmup_step()
 
         # if (
@@ -681,6 +690,35 @@ class DDPM(pl.LightningModule):
                 else:
                     self.cond_stage_model_metadata[key]["cond_stage_key"] = "waveform"
                     self.cond_stage_models[model_idx].embed_mode = "audio"
+    
+    def random_audioclip_condition(self):
+        # This function is only used during training, let the audioclip model to use both text and audio as condition
+        assert self.training == True
+
+        for key in self.cond_stage_model_metadata.keys():
+            metadata = self.cond_stage_model_metadata[key]
+            model_idx, cond_stage_key, conditioning_key = (
+                metadata["model_idx"],
+                metadata["cond_stage_key"],
+                metadata["conditioning_key"],
+            )
+
+            # If we use audioclip as condition, we might use audio for training, but we also must use text for evaluation
+            if isinstance(
+                self.cond_stage_models[model_idx], AudioClipImageEmbeddingClassifierFreev2
+            ):
+                self.cond_stage_model_metadata[key][
+                    "cond_stage_key_orig"
+                ] = self.cond_stage_model_metadata[key]["cond_stage_key"]
+                self.cond_stage_model_metadata[key][
+                    "embed_mode_orig"
+                ] = self.cond_stage_models[model_idx].embed_mode
+                if torch.randn(1).item() < 0.5:
+                    self.cond_stage_model_metadata[key]["cond_stage_key"] = "text"
+                    self.cond_stage_models[model_idx].embed_mode = "text"
+                else:
+                    self.cond_stage_model_metadata[key]["cond_stage_key"] = "waveform"
+                    self.cond_stage_models[model_idx].embed_mode = "audio"
 
     def on_validation_epoch_start(self) -> None:
         # Use text as condition during validation
@@ -695,6 +733,25 @@ class DDPM(pl.LightningModule):
             # If we use CLAP as condition, we might use audio for training, but we also must use text for evaluation
             if isinstance(
                 self.cond_stage_models[model_idx], CLAPAudioEmbeddingClassifierFreev2
+            ):
+                self.cond_stage_model_metadata[key][
+                    "cond_stage_key_orig"
+                ] = self.cond_stage_model_metadata[key]["cond_stage_key"]
+                self.cond_stage_model_metadata[key][
+                    "embed_mode_orig"
+                ] = self.cond_stage_models[model_idx].embed_mode
+                print(
+                    "Change the model original cond_keyand embed_mode %s, %s to text during evaluation"
+                    % (
+                        self.cond_stage_model_metadata[key]["cond_stage_key_orig"],
+                        self.cond_stage_model_metadata[key]["embed_mode_orig"],
+                    )
+                )
+                self.cond_stage_model_metadata[key]["cond_stage_key"] = "text"
+                self.cond_stage_models[model_idx].embed_mode = "text"
+            # If we use audioclip as condition, we might use audio for training, but we also must use image for evaluation
+            elif isinstance(
+                self.cond_stage_models[model_idx], AudioClipImageEmbeddingClassifierFreev2
             ):
                 self.cond_stage_model_metadata[key][
                     "cond_stage_key_orig"
@@ -808,6 +865,22 @@ class DDPM(pl.LightningModule):
                     )
                 )
 
+            elif isinstance(
+                self.cond_stage_models[model_idx], AudioClipImageEmbeddingClassifierFreev2
+            ):
+                self.cond_stage_model_metadata[key][
+                    "cond_stage_key"
+                ] = self.cond_stage_model_metadata[key]["cond_stage_key_orig"]
+                self.cond_stage_models[
+                    model_idx
+                ].embed_mode = self.cond_stage_model_metadata[key]["embed_mode_orig"]
+                print(
+                    "Change back the embedding mode to %s %s"
+                    % (
+                        self.cond_stage_model_metadata[key]["cond_stage_key"],
+                        self.cond_stage_models[model_idx].embed_mode,
+                    )
+                )
             if isinstance(
                 self.cond_stage_models[model_idx], CLAPGenAudioMAECond
             ) or isinstance(self.cond_stage_models[model_idx], SequenceGenAudioMAECond):
@@ -1227,9 +1300,14 @@ class LatentDiffusion(DDPM):
                             self.cond_stage_model_metadata[cond_model_key]["model_idx"]
                         ],
                         CLAPAudioEmbeddingClassifierFreev2,
+                    ) or isinstance(
+                        self.cond_stage_models[
+                            self.cond_stage_model_metadata[cond_model_key]["model_idx"]
+                        ],
+                        AudioClipImageEmbeddingClassifierFreev2,
                     ):
                         print(
-                            "Warning: CLAP model normally should use text for evaluation"
+                            "Warning: CLAP or AudioClip model normally should use text for evaluation"
                         )
 
                 # The original data for conditioning
@@ -1937,7 +2015,9 @@ class LatentDiffusion(DDPM):
                 if n_gen > 1:
                     try:
                         best_index = []
-                        similarity = self.clap.cos_similarity(
+                        #TODO: Change this to audioClip Similarity
+                        #similarity = self.clap.cos_similarity(
+                        similarity = self.audio_clip.cos_similarity(
                             torch.FloatTensor(waveform).squeeze(1), text
                         )
                         for i in range(z.shape[0]):
@@ -1950,7 +2030,7 @@ class LatentDiffusion(DDPM):
                         print("Similarity between generated audio and text", similarity)
                         print("Choose the following indexes:", best_index)
                     except Exception as e:
-                        print("Warning: while calculating CLAP score (not fatal), ", e)
+                        print("Warning: while calculating Audioclip score (not fatal), ", e)
 
                 self.save_waveform(waveform, waveform_save_path, name=fnames)
         return waveform_save_path

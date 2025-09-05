@@ -11,8 +11,8 @@ from PIL import Image
 from torchvision.transforms import Compose, Resize, CenterCrop, ToTensor, Normalize
 from tqdm import tqdm
 
-from .model import build_model
-from utils.simple_tokenizer import SimpleTokenizer as _Tokenizer
+from audioldm_train.modules.AudioCLIP.model.clip.model import build_model
+from audioldm_train.modules.AudioCLIP.utils.simple_tokenizer import SimpleTokenizer as _Tokenizer
 
 __all__ = ["available_models", "load", "tokenize"]
 _tokenizer = _Tokenizer()

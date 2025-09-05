@@ -8,10 +8,10 @@ import torch.nn.functional as F
 
 import torchvision as tv
 
-import ignite_trainer as it
+import audioldm_train.modules.AudioCLIP.ignite_trainer as it
 
-from model.esresnet import attention
-from utils.transforms import scale
+from audioldm_train.modules.AudioCLIP.model.esresnet import attention
+from audioldm_train.modules.AudioCLIP.utils.transforms import scale
 
 from typing import cast
 from typing import List
